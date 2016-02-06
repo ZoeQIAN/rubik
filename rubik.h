@@ -11,6 +11,7 @@ using std::vector;
 
 struct Surface{
 	Side init, now;
+	int idt;
 	Surface(Side i=UP, Side n=UP, int idt=0) : init(i), now(n), idt(idt){}
 };
 
