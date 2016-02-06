@@ -11,10 +11,9 @@ using std::vector;
 
 struct Surface{
 	Side init, now;
-	int idt;
-
 	Surface(Side i=UP, Side n=UP, int idt=0) : init(i), now(n), idt(idt){}
 };
+
 struct cube{
 	vector<Surface> sf;
 	Vec3i pos;
@@ -41,6 +40,8 @@ public:
 private:
 	int size;
 	//up down left right front back
+	float b_size=100;
+
 	cube blocks[3*3*3];
 	bool judge();
 

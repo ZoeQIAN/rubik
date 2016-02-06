@@ -58,8 +58,7 @@ void init () {
     glShadeModel (GL_SMOOTH);  
     // mesh.loadOFF (modelFilename);
 }
-float ang_x=0.0;
-float ang_y=0.0;
+
 void drawScene () {
     // rubik.Render(ang_x, ang_y);
     game.Render(); 

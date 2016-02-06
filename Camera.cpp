@@ -74,6 +74,7 @@ axis_to_quat(float a[3], float phi, float q[4]);
 // END : Code from SGI
 // ---------------------------------------------
 
+
 using namespace std;
 
 static int _spinning, _moving;

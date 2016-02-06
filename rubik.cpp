@@ -96,29 +96,19 @@ void Rubik::calRotation(){
 }
 
 void Rubik::Render(){
-	float b_size=100;
-	// std::cout << ang << "," << axis_x << "," << axis_y << "," << axis_z << std::endl;
-	    // 绘制cube物体，  
-    // glMatrixMode (GL_PROJECTION);       //回复原有的设置  
-    // glLoadIdentity ();  
     
     glMatrixMode(GL_PROJECTION);  
     glLoadIdentity();  
-    // gluPerspective(60,1.0,1.5,20);  
     glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
     glMatrixMode(GL_MODELVIEW);  
     glLoadIdentity();  
     glPushMatrix();
-     // viewing transformation    
-    // gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);  
-    // glRotatef(g_fAngle, 0.0, 1.0, 0.0);  
-    // glScalef (1.0, 2.0, 1.0);   
 
     glTranslatef(300,300,-230);
     GLfloat m[4][4]; 
   	build_rotmatrix(m, curquat);
     
-	glMultMatrixf(&m[0][0]);
+	glMultMatrixf(&m[0][0]);//important for rotation for tang
 	glTranslatef(-150,-150,-150);
     glBegin(GL_QUADS);
 	for(int zz=0; zz<3;zz++)
