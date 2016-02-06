@@ -27,7 +27,6 @@ static unsigned int FPS = 0;
 static bool fullScreen = false;
 
 static Camera camera;
-static Rubik rubik(SIMPLE,3);
 static GameController game(DEFAULT_SCREENWIDTH,DEFAULT_SCREENHEIGHT);
 // static Mesh mesh;
 
@@ -53,55 +52,16 @@ void init () {
     glEnable (GL_DEPTH_TEST); // Enable the z-buffer in the rasterization
     glLineWidth (2.0); // Set the width of edges in GL_LINE polygon mode
     glClearColor (0.0f, 0.0f, 0.0f, 1.0f); // Background color
-    // glClearColor (1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 
+    glClearColor (0.0, 0.0, 0.0, 0.0);  
     glShadeModel (GL_SMOOTH);  
     // mesh.loadOFF (modelFilename);
 }
-float ang_x=0.0;
-float ang_y=0.0;
+
 void drawScene () {
-    // rubik.Render(ang_x, ang_y);
+    glColor3f (1.0, 1.0, 1.0);  
     game.Render(); 
-
-    // glMatrixMode(GL_PROJECTION);  
-    // glLoadIdentity();  
-    // glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
-    // glMatrixMode(GL_MODELVIEW);  
-    // glLoadIdentity();  
-
-    // glPushMatrix();
-    
-    // gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    // glTranslatef(200,200,-100);
-    // glRotatef(-ang, 0.0, 1.0, 0.0);  
-    // glTranslatef(-50,-50,50);
-    // glBegin(GL_QUADS);
-
-    // glNormal3f(0,0,1);
-    // glColor3f(1,0,0);
-    // glVertex3f(100,0,0);
-    // glVertex3f(100,100,0);
-    // glVertex3f(0,100,0);
-    // glVertex3f(0,0,0);
- 
-    // glNormal3f(1,0,0);
-    // glColor3f(1,1,0);
-    // glVertex3f(100,100,-100);
-    // glVertex3f(100,100,0);
-    // glVertex3f(100,0,0);
-    // glVertex3f(100,0,-100);
-    // glColor3f(1,1,0);
-    // glVertex3f(200,0,0);
-    // glVertex3f(200,100,0);
-    // glVertex3f(100,100,0);
-    // // glVertex3f(100,0,0);
-
-    // glEnd();
-
-    // glPopMatrix();
-    
-
 }
 
 void reshape(int w, int h) {
@@ -110,7 +70,6 @@ void reshape(int w, int h) {
 
 void display () {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    camera.apply();
     drawScene ();
     glFlush ();
     glutSwapBuffers ();
@@ -120,7 +79,7 @@ void key (unsigned char keyPressed, int x, int y) {
     switch (keyPressed) {
     case 'f':
         if (fullScreen) {
-            // glutReshapeWindow (camera.getScreenWidth (), camera.getScreenHeight ());
+            glutReshapeWindow (camera.getScreenWidth (), camera.getScreenHeight ());
             fullScreen = false;
         } else {
             glutFullScreen ();
@@ -154,16 +113,13 @@ void mouse (int button, int state, int x, int y) {
             game.mouseClick(pos);
             break;  
         }
+
         case GLUT_UP:  
             game.mouseRelease(); 
             break;  
     }  
     if(game.isQuit()) exit(0);
     glutPostRedisplay();  
-}
-
-void motion(int x, int y){
-    game.mouseMove(x,y);
 }
 
 void idle () {
@@ -194,12 +150,11 @@ int main (int argc, char ** argv) {
     window = glutCreateWindow (appTitle.c_str ());
     // init (argc == 2 ? argv[1] : DEFAULT_MESH_FILE.c_str ());
     init();
-    glutIdleFunc (idle);
+    // glutIdleFunc (idle);
     glutReshapeFunc (reshape);
     glutDisplayFunc (display);
     glutKeyboardFunc (key);
     glutMouseFunc (mouse);
-    glutMotionFunc (motion);
     printUsage ();
     glutMainLoop ();
     return 0;

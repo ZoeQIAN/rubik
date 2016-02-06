@@ -5,6 +5,7 @@
 #include "Vec3.h"
 #include "param.h"
 #include <vector>
+#include <GLUT/glut.h>
 
 using std::vector;
 
@@ -19,17 +20,23 @@ struct cube{
 	Vec3i pos;
 };
 
-class rubik {
+class Rubik {
 public:
-	rubik(int sz=3);
-	~rubik();
+	Rubik(Level lv,int sz=3);
+	~Rubik();
 
-	virtual void shuffle(Level lv);
+	
 	//需要传入被点击的面
 	virtual void rotate(Vec3i c, Side s, Direction dir);
 
 	void print();
 	void print2();
+	void Render();
+
+	bool isRotating() const {return rotating;}
+	void startRotation(float x,float y);
+	void stopRotation();
+	void selfRotate(float x, float y);
 
 private:
 	int size;
@@ -37,7 +44,7 @@ private:
 	cube blocks[3*3*3];
 	bool judge();
 
-
+	void shuffle(Level lv);
 	//fix:
 	// the axis of rotation, which stays immutable in the rotation
 	// x 0 y 1 z 2
@@ -47,6 +54,15 @@ private:
 	// true for clockwise
 	void transform(int fix, int pf, bool dir);
 	Side surfaceRotate(Side s, bool dir, int pixel);
+	void colorMap(Side s, float& r,float& g, float&b);
+
+	bool rotating;
+	float curquat[4];
+	Vec3f lastPos;
+	Vec3f curPos;
+	float axis[3];
+	float angle;
+	void calRotation();
 };
 
 
