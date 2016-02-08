@@ -240,10 +240,20 @@ public:
 	return (*this) - (N * w);
   } 
 
+  inline void rotate_by_matrix (const T m[4][4]) {
+    T c[3];
+    for (int i=0;i<3;i++){
+        for (int j=0;j<3;j++){
+            c[i]+=( m[i][j]*p[j]);
+        }
+    }
+    p[0] = c[0];
+    p[1] = c[1];
+    p[2] = c[2];
+  }
 protected:
   T p[3];
 };
-
 
 template <class T>
 inline T dist (const Vec3<T> & a, const Vec3<T> & b) {

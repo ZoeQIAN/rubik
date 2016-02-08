@@ -22,7 +22,7 @@ public:
 
 private:
 	enum Mode{ACCUEIL, NIVEAU, SCORES, GAME} mode;
-
+	unsigned int screenWidth, screenHeight;
 	//The game will be constructed when the difficulty is chosen
 	Rubik *rubik;
 	bool quit;	

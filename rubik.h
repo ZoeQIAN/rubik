@@ -38,7 +38,8 @@ public:
 	void startRotation(float x,float y);
 	void stopRotation();
 	void selfRotate(float x, float y);
-
+	float curquat[4];
+	Vec3f p[4];
 private:
 	int size;
 	//up down left right front back
@@ -59,7 +60,6 @@ private:
 	void colorMap(Side s, float& r,float& g, float&b);
 
 	bool rotating;
-	float curquat[4];
 	Vec3f lastPos;
 	Vec3f curPos;
 	float axis[3];
@@ -68,7 +68,6 @@ private:
 	//vec4 Up[4],Down[4],Left[4],Right[4],Front[4],Back[4];
 	//vec4 Up[4];
 	//vec4 Up_curr[4];
-	Vec3f p[4];
 	//vector<Vec3f[]> Rects_init;
 };
 

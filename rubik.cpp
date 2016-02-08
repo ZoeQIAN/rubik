@@ -52,7 +52,6 @@ Rubik::Rubik(Level lv,int sz){
 	p[2] = Vec3f(-1.5*edge_length, 1.5*edge_length, 1.5*edge_length);
 	p[3] = Vec3f(-1.5*edge_length, -1.5*edge_length, 1.5*edge_length);
 
-	Up_curr[0] = Up[0];
 	for (int i = 0; i < 3; ++i)
 		for (int j=0; j<3; ++j)
 			for(int k=0; k<3; ++k){
@@ -115,13 +114,10 @@ void Rubik::startRotation(float x, float y){
 	rotating=true;
 	trackball(x,y,lastPos);
 	std::cout << "Start:" << lastPos << std::endl;
-    print(Up_curr[0]);
 }
-
 void Rubik::stopRotation(){
 	rotating=false;
 
-    print(Up_curr[0]);
 }
 
 void Rubik::selfRotate(float x, float y) {

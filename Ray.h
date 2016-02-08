@@ -11,16 +11,19 @@ public:
     direction =normalize(direct);
 
   }
-  bool rect_is_intersect_with(Vec3f[] Rect)
+
+  bool rect_is_intersect_with(Vec3f* Rect)
   {
-    return is_intersect_with(Rect[0], Rect[1], Rect[3])||is_intersect_with(Rect[1],Rect[2].Rect[3]);
+    return is_intersect_with(Rect[0], Rect[1], Rect[3])||is_intersect_with(Rect[1],Rect[2],Rect[3]);
   }
-  Vec3f rect_intersect_at(Vec3f[] Rect)
+
+  Vec3f rect_intersect_at(Vec3f* Rect)
   {
     if(is_intersect_with(Rect[0], Rect[1], Rect[3])) return intersect_at(Rect[0], Rect[1], Rect[3]);
-    else if(is_intersect_with(Rect[1],Rect[2].Rect[3])) return intersect_at(Rect[1], Rect[2], Rect[3]);
+    else if(is_intersect_with(Rect[1],Rect[2], Rect[3])) return intersect_at(Rect[1], Rect[2], Rect[3]);
     else assert(-1);
   }
+
   bool is_intersect_with(Vec3f p0, Vec3f p1, Vec3f p2)
   {
   Vec3f e0(p1-p0);
