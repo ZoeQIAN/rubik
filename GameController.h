@@ -1,12 +1,12 @@
 #ifndef __GAMECONTROLLER__
 #define __GAMECONTROLLER__
 
-#include "button.h"
+#include "Button.h"
 #include "param.h"
 #include "rubik.h"
 #include <string>
 #include <iostream>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 
 using std::string;
 

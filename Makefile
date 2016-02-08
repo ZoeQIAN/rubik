@@ -1,9 +1,8 @@
 CIBLE = main
 SRCS =  main.cpp Button.cpp GameController.cpp rubik.cpp Camera.cpp basicfunction.cpp
 
-OS = $(shell uname -s)
 
-LIBS = -framework GLUT -framework OpenGL -framework Cocoa
+LIBS =  -lglut -lGLU -lGL -lm
 
 CC = g++
 CPP = g++

@@ -5,7 +5,7 @@
 #include "Vec3.h"
 #include "param.h"
 #include <vector>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 
 using std::vector;
 

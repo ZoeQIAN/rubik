@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <cmath>
 //#include <GL/glut.h>
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "Vec3.h"
 #include "Camera.h"
 #include "GameController.h"

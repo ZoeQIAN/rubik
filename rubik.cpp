@@ -1,5 +1,7 @@
-#include "Rubik.h"
+#include "rubik.h"
 #include "basicfunction.h"
+#include <cstdio>
+#include <cstdlib>
 void trackball(int x, int y, Vec3f& v);
 
 Rubik::Rubik(Level lv,int sz){
@@ -44,7 +46,7 @@ Rubik::Rubik(Level lv,int sz){
 	calRotation();
 	std::cout << axis[0] << "," << axis[1] << ","<< axis[2] << "," << angle<< std::endl;
 	axis_to_quat(axis,angle,curquat);
-	printf("curquat = %f %f %f %f\n", curquat[0], curquat[1], curquat[2], curquat[3]);
+	std::printf("curquat = %f %f %f %f\n", curquat[0], curquat[1], curquat[2], curquat[3]);
 }
 
 Rubik::~Rubik(){}
@@ -77,7 +79,7 @@ void Rubik::selfRotate(float x, float y) {
 	
 	trackball(x,y,curPos);
 	calRotation();
- 
+ 	lastPos = curPos;
     float quat[4];
     axis_to_quat(axis,angle,quat);
     add_quats(quat,curquat,curquat);

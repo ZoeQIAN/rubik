@@ -22,10 +22,11 @@
 
 #include "Camera.h"
 #include "basicfunction.h"
-#include <GLUT/glut.h>
-#include <OpenGL/glu.h>
+#include <GL/glut.h>
+#include <GL/glu.h>
 #include <iostream>
 #include <string>
+
 
 // ---------------------------------------------
 // BEGIN : Code from SGI
