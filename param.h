@@ -10,5 +10,9 @@ static const unsigned int DEFAULT_SCREENHEIGHT = 600;
 static const unsigned int DEFAULT_SCREENDEPTH = 5000;
 
 static const int size=3;
+static float edge_length=0.2;
+
+
+struct Pos{float x,y;};
 
 #endif

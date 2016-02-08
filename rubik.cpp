@@ -5,7 +5,54 @@
 void trackball(int x, int y, Vec3f& v);
 
 Rubik::Rubik(Level lv,int sz){
+	//Vec3f[4] Up,Down,Left,Right,Front,Back;
+	/*
+	vec4 v[8];
+	v[0] = vec4(1.0f*3*edge_length, 0.0f*3*edge_length,1.0f*3*edge_length,1.0f);
+	v[1] = vec4(1.0f*3*edge_length, 1.0f*3*edge_length, 1.0f*3*edge_length,0.0f);
+	v[2] = vec4(0.0f*3*edge_length,1.0f*3*edge_length,1.0f*3*edge_length,0.0f);
+	v[3] = vec4(1.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
+	v[4] = vec4(1.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
+	v[5] = vec4(1.0f*3*edge_length,1.0f*3*edge_length,0.0f*3*edge_length,0.0f);
+	v[6] = vec4(0.0f*3*edge_length,1.0f*3*edge_length,0.0f*3*edge_length,0.0f);
+	v[7] = vec4(0.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
 
+	Up[0] = v[0];
+	Up[1] = v[1];
+	Up[2] = v[2];
+	Up[3] = v[3];
+	Down[0] = v[7];
+	Down[1] = v[6];
+	Down[2] = v[5];
+	Down[3] = v[4];
+
+	Front[0] = v[3];
+	Front[1] = v[2];
+	Front[2] = v[6];
+	Front[3] = v[7];
+
+	Back[0] = v[1];
+	Back[1] = v[0];
+	Back[2] = v[4];
+	Back[3] = v[5];
+
+	Left[0] = v[0];
+	Left[1] = v[3];
+	Left[2] = v[7];
+	Left[3] = v[4];
+
+
+	Right[0] = v[2];
+	Right[1] = v[1];
+	Right[2] = v[5];
+	Right[3] = v[6];
+*/
+	p[0] = Vec3f(1.5*edge_length, -1.5*edge_length, 1.5*edge_length);
+	p[1] = Vec3f(1.5*edge_length, 1.5*edge_length, 1.5*edge_length);
+	p[2] = Vec3f(-1.5*edge_length, 1.5*edge_length, 1.5*edge_length);
+	p[3] = Vec3f(-1.5*edge_length, -1.5*edge_length, 1.5*edge_length);
+
+	Up_curr[0] = Up[0];
 	for (int i = 0; i < 3; ++i)
 		for (int j=0; j<3; ++j)
 			for(int k=0; k<3; ++k){
@@ -68,10 +115,13 @@ void Rubik::startRotation(float x, float y){
 	rotating=true;
 	trackball(x,y,lastPos);
 	std::cout << "Start:" << lastPos << std::endl;
+    print(Up_curr[0]);
 }
 
 void Rubik::stopRotation(){
 	rotating=false;
+
+    print(Up_curr[0]);
 }
 
 void Rubik::selfRotate(float x, float y) {
@@ -79,10 +129,33 @@ void Rubik::selfRotate(float x, float y) {
 	
 	trackball(x,y,curPos);
 	calRotation();
+
  	lastPos = curPos;
+
     float quat[4];
     axis_to_quat(axis,angle,quat);
+
+    /////TURNING THE INDICATORS
+    //versor quat_in_vec = versor(quat[0],quat[1],quat[2],quat[3]);
+    //Down= rotation_mat * Down;
+    //Left= rotation_mat *  Left;
+    //Right= rotation_mat * Right;
+    //Front= rotation_mat * Front;
+    //Back= rotation_mat * Back;
+
+
     add_quats(quat,curquat,curquat);
+
+	/*
+    versor quat_in_vec;
+    quat_in_vec.q[0] = curquat[0];
+    quat_in_vec.q[1] = curquat[1];
+    quat_in_vec.q[2] = curquat[2];
+    quat_in_vec.q[3] = curquat[3];
+    mat4 rotation_mat = quat_to_mat4(quat_in_vec);
+    //
+    Up_curr[0] = rotation_mat * Up[0];
+    */
 }
 
 void Rubik::calRotation(){
@@ -91,7 +164,7 @@ void Rubik::calRotation(){
     dy = curPos[1] - lastPos[1];
     dz = curPos[2] - lastPos[2];
     
-    angle = -0.1*sqrt(dx * dx + dy * dy + dz * dz);
+    angle = -0.8*sqrt(dx * dx + dy * dy + dz * dz);
     axis[0] = lastPos[1] * curPos[2] - lastPos[2] * curPos[1];
     axis[1] = lastPos[2] * curPos[0] - lastPos[0] * curPos[2];
     axis[2] = lastPos[0] * curPos[1] - lastPos[1] * curPos[0];
@@ -99,19 +172,19 @@ void Rubik::calRotation(){
 
 void Rubik::Render(){
     
-    glMatrixMode(GL_PROJECTION);  
-    glLoadIdentity();  
-    glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
-    glMatrixMode(GL_MODELVIEW);  
-    glLoadIdentity();  
-    glPushMatrix();
+    //glMatrixMode(GL_PROJECTION);  
+    //glLoadIdentity();  
+    //glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
+    //glMatrixMode(GL_MODELVIEW);  
+    //glLoadIdentity();  
+    //glPushMatrix();
 
-    glTranslatef(300,300,-230);
+    //glTranslatef(0.5 * DEFAULT_SCREENWIDTH,0.5 *DEFAULT_SCREENHEIGHT,-230);
     GLfloat m[4][4]; 
   	build_rotmatrix(m, curquat);
     
 	glMultMatrixf(&m[0][0]);//important for rotation for tang
-	glTranslatef(-150,-150,-150);
+	glTranslatef(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
     glBegin(GL_QUADS);
 	for(int zz=0; zz<3;zz++)
 		for(int yy=0; yy<3;yy++)
@@ -130,45 +203,45 @@ void Rubik::Render(){
 			switch(s.now){
 				case UP:
 				glNormal3f(0,0,1);
-				glVertex3f((x+1)*b_size,y*b_size,3*b_size);
-				glVertex3f((x+1)*b_size,(y+1)*b_size,3*b_size);
-				glVertex3f(x*b_size,(y+1)*b_size,3*b_size);
-				glVertex3f(x*b_size,y*b_size,3*b_size);
+				glVertex3f((x+1)*edge_length,y*edge_length,3*edge_length);
+				glVertex3f((x+1)*edge_length,(y+1)*edge_length,3*edge_length);
+				glVertex3f(x*edge_length,(y+1)*edge_length,3*edge_length);
+				glVertex3f(x*edge_length,y*edge_length,3*edge_length);
 				break;
 				case DOWN:
 				glNormal3f(0,0,-1);
-				glVertex3f(x*b_size,y*b_size,0);
-				glVertex3f(x*b_size,(y+1)*b_size,0);
-				glVertex3f((x+1)*b_size,(y+1)*b_size,0);
-				glVertex3f((x+1)*b_size,(y)*b_size,0);
+				glVertex3f(x*edge_length,y*edge_length,0);
+				glVertex3f(x*edge_length,(y+1)*edge_length,0);
+				glVertex3f((x+1)*edge_length,(y+1)*edge_length,0);
+				glVertex3f((x+1)*edge_length,(y)*edge_length,0);
 				break;
 				case LEFT:
 				glNormal3f(0,-1,0);
-				glVertex3f((x+1)*b_size,0,(z+1)*b_size);
-				glVertex3f(x*b_size,0,(z+1)*b_size);
-				glVertex3f(x*b_size,0,z*b_size);	
-				glVertex3f((x+1)*b_size,0,z*b_size);
+				glVertex3f((x+1)*edge_length,0,(z+1)*edge_length);
+				glVertex3f(x*edge_length,0,(z+1)*edge_length);
+				glVertex3f(x*edge_length,0,z*edge_length);	
+				glVertex3f((x+1)*edge_length,0,z*edge_length);
 				break;
 				case RIGHT:
 				glNormal3f(0,1,0);
-				glVertex3f(x*b_size,3*b_size,(z+1)*b_size);
-				glVertex3f((x+1)*b_size,3*b_size,(z+1)*b_size);
-				glVertex3f((x+1)*b_size,3*b_size,z*b_size);
-				glVertex3f(x*b_size,3*b_size,z*b_size);		
+				glVertex3f(x*edge_length,3*edge_length,(z+1)*edge_length);
+				glVertex3f((x+1)*edge_length,3*edge_length,(z+1)*edge_length);
+				glVertex3f((x+1)*edge_length,3*edge_length,z*edge_length);
+				glVertex3f(x*edge_length,3*edge_length,z*edge_length);		
 				break;
 				case FRONT:
 				glNormal3f(1,0,0);
-				glVertex3f(3*b_size,(y+1)*b_size,(z+1)*b_size);
-				glVertex3f(3*b_size,y*b_size,(z+1)*b_size);
-				glVertex3f(3*b_size,y*b_size,z*b_size);		
-				glVertex3f(3*b_size,(y+1)*b_size,z*b_size);
+				glVertex3f(3*edge_length,(y+1)*edge_length,(z+1)*edge_length);
+				glVertex3f(3*edge_length,y*edge_length,(z+1)*edge_length);
+				glVertex3f(3*edge_length,y*edge_length,z*edge_length);		
+				glVertex3f(3*edge_length,(y+1)*edge_length,z*edge_length);
 				break;
 				case BACK:
 				glNormal3f(-1,0,0);
-				glVertex3f(0,y*b_size,(z+1)*b_size);
-				glVertex3f(0,(y+1)*b_size,(z+1)*b_size);
-				glVertex3f(0,(y+1)*b_size,z*b_size);
-				glVertex3f(0,y*b_size,z*b_size);		
+				glVertex3f(0,y*edge_length,(z+1)*edge_length);
+				glVertex3f(0,(y+1)*edge_length,(z+1)*edge_length);
+				glVertex3f(0,(y+1)*edge_length,z*edge_length);
+				glVertex3f(0,y*edge_length,z*edge_length);		
 				break;
 				default:
 				break;
@@ -392,7 +465,7 @@ void Rubik::print2(){
 	}
 
 }
-void Rubik::print(){
+void Rubik::printall(){
 
 	int up[3][3];
 	int down[3][3];

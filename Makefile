@@ -1,5 +1,5 @@
 CIBLE = main
-SRCS =  main.cpp Button.cpp GameController.cpp rubik.cpp Camera.cpp basicfunction.cpp
+SRCS =  main.cpp GameController.cpp rubik.cpp Camera.cpp basicfunction.cpp maths_funcs.cpp
 
 
 LIBS =  -lglut -lGLU -lGL -lm
@@ -22,7 +22,6 @@ clean:
 
 basicfunction.o: basicfunction.h
 Camera.o: Camera.cpp Camera.h basicfunction.h
-Button.o: Button.cpp Button.h
-rubik.o: rubik.cpp rubik.h basicfunction.h
-GameController.o: GameController.cpp GameController.h Button.h
+rubik.o: rubik.cpp rubik.h basicfunction.h maths_funcs.h
+GameController.o: GameController.cpp GameController.h
 main.o: main.cpp GameController.h Camera.h

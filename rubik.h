@@ -6,6 +6,7 @@
 #include "param.h"
 #include <vector>
 #include <GL/glut.h>
+#include "maths_funcs.h"
 
 using std::vector;
 
@@ -29,7 +30,7 @@ public:
 	//需要传入被点击的面
 	virtual void rotate(Vec3i c, Side s, Direction dir);
 
-	void print();
+	void printall();
 	void print2();
 	void Render();
 
@@ -41,7 +42,6 @@ public:
 private:
 	int size;
 	//up down left right front back
-	float b_size=100;
 
 	cube blocks[3*3*3];
 	bool judge();
@@ -65,6 +65,11 @@ private:
 	float axis[3];
 	float angle;
 	void calRotation();
+	//vec4 Up[4],Down[4],Left[4],Right[4],Front[4],Back[4];
+	//vec4 Up[4];
+	//vec4 Up_curr[4];
+	Vec3f p[4];
+	//vector<Vec3f[]> Rects_init;
 };
 
 
