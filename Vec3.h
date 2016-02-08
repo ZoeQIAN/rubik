@@ -242,6 +242,9 @@ public:
 
   inline void rotate_by_matrix (const T m[4][4]) {
     T c[3];
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
     for (int i=0;i<3;i++){
         for (int j=0;j<3;j++){
             c[i]+=( m[i][j]*p[j]);
@@ -251,7 +254,7 @@ public:
     p[1] = c[1];
     p[2] = c[2];
   }
-protected:
+public:
   T p[3];
 };
 

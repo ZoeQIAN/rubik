@@ -40,13 +40,21 @@ public:
 	void selfRotate(float x, float y);
 	float curquat[4];
 	Vec3f p[4];
+	void play_rotate(Vec3f play_origin_point, Vec3f play_dest_point){
+	 play_origin_point = play_origin_point-prefix;
+	 play_origin_point = play_origin_point;
+	 play_dest_point = play_origin_point-prefix;
+	 play_dest_point = play_dest_point;
+	 std::cerr<<"doing rotation !!!"<<play_origin_point<<play_dest_point<<std::endl;
+
+	}
 private:
 	int size;
 	//up down left right front back
 
 	cube blocks[3*3*3];
 	bool judge();
-
+	Vec3f prefix = Vec3f(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
 	void shuffle(Level lv);
 	//fix:
 	// the axis of rotation, which stays immutable in the rotation

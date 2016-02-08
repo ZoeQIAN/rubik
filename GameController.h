@@ -16,7 +16,7 @@ public:
 
 	void Render();
 	void mouseClick(Pos pos, bool leftb);
-	void mouseRelease(bool leftb);
+	void mouseRelease(Pos pos,bool leftb);
 	void mouseMove(float x, float y);
 	bool isQuit() const{return quit;}
 
@@ -26,6 +26,8 @@ private:
 	//The game will be constructed when the difficulty is chosen
 	Rubik *rubik;
 	bool quit;	
+	bool playing;
+	Vec3f play_origin_point, play_dest_point;
 };
 
 #endif

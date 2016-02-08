@@ -110,6 +110,12 @@ mat4::mat4 (float a, float b, float c, float d,
 	m[15] = p;
 }
 
+mat4::mat4(float**  ori){
+	float * pnt = *ori;
+	for(int i=0;i<16;i++)
+			m[i] = pnt[i];
+}
+
 /*-----------------------------PRINT FUNCTIONS--------------------------------*/
 void print (const vec2& v) {
 	printf ("[%.2f, %.2f]\n", v.v[0], v.v[1]);
@@ -655,7 +661,8 @@ versor quat_from_axis_deg (float degrees, float x, float y, float z) {
 	return quat_from_axis_rad (ONE_DEG_IN_RAD * degrees, x, y, z);
 }
 
-mat4 quat_to_mat4 (const versor& q) {
+mat4 quat_to_mat4 ( versor& p) {
+	versor q = normalise(p);
 	float w = q.q[0];
 	float x = q.q[1];
 	float y = q.q[2];

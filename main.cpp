@@ -159,18 +159,18 @@ void key (unsigned char keyPressed, int x, int y) {
 
 void mouse (int button, int state, int x, int y) {
     // camera.handleMouseClickEvent (button, state, x, y);
+    Pos pos={x,y}; 
     if(button==GLUT_LEFT_BUTTON)  
     {
     switch(state)  
     {  
         case GLUT_DOWN:  { 
-            //std::cout << "Mouse pos :" << x <<"," << 500-y << std::endl;
-            Pos pos={x,y};  
+            //std::cout << "Mouse pos :" << x <<"," << 500-y << std::endl
             game.mouseClick(pos, true);
             break;  
         }
         case GLUT_UP:  
-            game.mouseRelease(true); 
+            game.mouseRelease(pos,true); 
             //float cam_x, cam_y,cam_z;
             //camera.getPos(cam_x, cam_y,cam_z);
             //std::cerr<<"camera position: "<<cam_x<<cam_y<<cam_z<<endl;
@@ -182,12 +182,11 @@ void mouse (int button, int state, int x, int y) {
     switch(state)
     {
         case GLUT_DOWN:  { 
-            Pos pos={x,y};  
             game.mouseClick(pos, false);
             break;  
         }
         case GLUT_UP:  
-            game.mouseRelease( false); 
+            game.mouseRelease( pos,false); 
             break;  
     }
     }

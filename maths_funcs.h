@@ -97,6 +97,7 @@ struct mat4 {
 				float e, float f, float g, float h,
 				float i, float j, float k, float l,
 				float mm, float n, float o, float p);
+	mat4(float**  ori);
 	vec4 operator* (const vec4& rhs);
 	mat4 operator* (const mat4& rhs);
 	mat4& operator= (const mat4& rhs);

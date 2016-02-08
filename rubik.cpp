@@ -2,6 +2,12 @@
 #include "basicfunction.h"
 #include <cstdio>
 #include <cstdlib>
+
+#define Paintrect(rect,m) for(int i=0; i<4; i++){\
+						rect[i] +=prefix;\
+						rect[i].rotate_by_matrix(m);\
+						glVertex3f(rect[i].p[0],rect[i].p[1],rect[i].p[2]);\
+					}
 void trackball(int x, int y, Vec3f& v);
 
 Rubik::Rubik(Level lv,int sz){
@@ -122,7 +128,7 @@ void Rubik::stopRotation(){
 
 void Rubik::selfRotate(float x, float y) {
 	if(!rotating) return;
-	
+
 	trackball(x,y,curPos);
 	calRotation();
 
@@ -131,27 +137,8 @@ void Rubik::selfRotate(float x, float y) {
     float quat[4];
     axis_to_quat(axis,angle,quat);
 
-    /////TURNING THE INDICATORS
-    //versor quat_in_vec = versor(quat[0],quat[1],quat[2],quat[3]);
-    //Down= rotation_mat * Down;
-    //Left= rotation_mat *  Left;
-    //Right= rotation_mat * Right;
-    //Front= rotation_mat * Front;
-    //Back= rotation_mat * Back;
-
-
     add_quats(quat,curquat,curquat);
 
-	/*
-    versor quat_in_vec;
-    quat_in_vec.q[0] = curquat[0];
-    quat_in_vec.q[1] = curquat[1];
-    quat_in_vec.q[2] = curquat[2];
-    quat_in_vec.q[3] = curquat[3];
-    mat4 rotation_mat = quat_to_mat4(quat_in_vec);
-    //
-    Up_curr[0] = rotation_mat * Up[0];
-    */
 }
 
 void Rubik::calRotation(){
@@ -159,7 +146,7 @@ void Rubik::calRotation(){
     dx = curPos[0] - lastPos[0];
     dy = curPos[1] - lastPos[1];
     dz = curPos[2] - lastPos[2];
-    
+
     angle = -0.8*sqrt(dx * dx + dy * dy + dz * dz);
     axis[0] = lastPos[1] * curPos[2] - lastPos[2] * curPos[1];
     axis[1] = lastPos[2] * curPos[0] - lastPos[0] * curPos[2];
@@ -167,80 +154,97 @@ void Rubik::calRotation(){
 }
 
 void Rubik::Render(){
-    
-    //glMatrixMode(GL_PROJECTION);  
-    //glLoadIdentity();  
-    //glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
-    //glMatrixMode(GL_MODELVIEW);  
-    //glLoadIdentity();  
-    //glPushMatrix();
+	//std::printf("curquat = %f %f %f %f\n", curquat[0], curquat[1], curquat[2], curquat[3]);
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+    //glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);
+    glMatrixMode(GL_MODELVIEW);
+    //glLoadIdentity();
+    glPushMatrix();
 
     //glTranslatef(0.5 * DEFAULT_SCREENWIDTH,0.5 *DEFAULT_SCREENHEIGHT,-230);
-    GLfloat m[4][4]; 
+    GLfloat m[4][4];
   	build_rotmatrix(m, curquat);
-    
-	glMultMatrixf(&m[0][0]);//important for rotation for tang
-	glTranslatef(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
+	/*std::cout<<"rotation matrix: ";
+	for(int i=0;i<4;i++)
+		for(int j=0;j<4;j++)
+			std::cout<<m[i][j]<<" ";*/
+	Vec3f prefix = Vec3f(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
+	//glMultMatrixf(&m[0][0]);//important for rotation for tang
+	//glTranslatef(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
     glBegin(GL_QUADS);
+		Vec3f rect[4];
 	for(int zz=0; zz<3;zz++)
 		for(int yy=0; yy<3;yy++)
 			for(int xx=0; xx<3; xx++){
-		cube c = blocks[xx+yy*3+zz*3*3];
+				cube c = blocks[xx+yy*3+zz*3*3];
 		for(int j=0; j<c.sf.size(); j++){
-			Surface s = c.sf[j];
+				Surface s = c.sf[j];
 
-			float r,g,b;
-			colorMap(s.init,r,g,b);
-			glColor3f(r,g,b);
+				float r,g,b;
+				colorMap(s.init,r,g,b);
+				glColor3f(r,g,b);
 
-			int x=c.pos[0];
-			int y=c.pos[1];
-			int z=c.pos[2];
-			switch(s.now){
-				case UP:
+				int x=c.pos[0];
+				int y=c.pos[1];
+				int z=c.pos[2];
+				switch(s.now){
+					case UP:
+					glNormal3f(0,0,1);
+					rect[0] = Vec3f((x+1)*edge_length,y*edge_length,3*edge_length);
+					rect[1] = Vec3f((x+1)*edge_length,(y+1)*edge_length,3*edge_length);
+					rect[2] = Vec3f(x*edge_length,(y+1)*edge_length,3*edge_length);
+					rect[3] = Vec3f(x*edge_length,y*edge_length,3*edge_length);
+					Paintrect(rect,m);
+					/*
 				glNormal3f(0,0,1);
 				glVertex3f((x+1)*edge_length,y*edge_length,3*edge_length);
 				glVertex3f((x+1)*edge_length,(y+1)*edge_length,3*edge_length);
 				glVertex3f(x*edge_length,(y+1)*edge_length,3*edge_length);
-				glVertex3f(x*edge_length,y*edge_length,3*edge_length);
-				break;
-				case DOWN:
-				glNormal3f(0,0,-1);
-				glVertex3f(x*edge_length,y*edge_length,0);
-				glVertex3f(x*edge_length,(y+1)*edge_length,0);
-				glVertex3f((x+1)*edge_length,(y+1)*edge_length,0);
-				glVertex3f((x+1)*edge_length,(y)*edge_length,0);
-				break;
-				case LEFT:
-				glNormal3f(0,-1,0);
-				glVertex3f((x+1)*edge_length,0,(z+1)*edge_length);
-				glVertex3f(x*edge_length,0,(z+1)*edge_length);
-				glVertex3f(x*edge_length,0,z*edge_length);	
-				glVertex3f((x+1)*edge_length,0,z*edge_length);
-				break;
-				case RIGHT:
-				glNormal3f(0,1,0);
-				glVertex3f(x*edge_length,3*edge_length,(z+1)*edge_length);
-				glVertex3f((x+1)*edge_length,3*edge_length,(z+1)*edge_length);
-				glVertex3f((x+1)*edge_length,3*edge_length,z*edge_length);
-				glVertex3f(x*edge_length,3*edge_length,z*edge_length);		
-				break;
-				case FRONT:
-				glNormal3f(1,0,0);
-				glVertex3f(3*edge_length,(y+1)*edge_length,(z+1)*edge_length);
-				glVertex3f(3*edge_length,y*edge_length,(z+1)*edge_length);
-				glVertex3f(3*edge_length,y*edge_length,z*edge_length);		
-				glVertex3f(3*edge_length,(y+1)*edge_length,z*edge_length);
-				break;
-				case BACK:
-				glNormal3f(-1,0,0);
-				glVertex3f(0,y*edge_length,(z+1)*edge_length);
-				glVertex3f(0,(y+1)*edge_length,(z+1)*edge_length);
-				glVertex3f(0,(y+1)*edge_length,z*edge_length);
-				glVertex3f(0,y*edge_length,z*edge_length);		
-				break;
-				default:
-				break;
+				glVertex3f(x*edge_length,y*edge_length,3*edge_length);*/
+					break;
+					case DOWN:
+					glNormal3f(0,0,-1);
+					rect[0] = Vec3f(x*edge_length,y*edge_length,0);
+					rect[1] = Vec3f(x*edge_length,(y+1)*edge_length,0);
+					rect[2] = Vec3f((x+1)*edge_length,(y+1)*edge_length,0);
+					rect[3] = Vec3f((x+1)*edge_length,(y)*edge_length,0);
+					Paintrect(rect,m);
+					break;
+					case LEFT:
+					glNormal3f(0,-1,0);
+					rect[0] = Vec3f((x+1)*edge_length,0,(z+1)*edge_length);
+					rect[1] = Vec3f(x*edge_length,0,(z+1)*edge_length);
+					rect[2] = Vec3f(x*edge_length,0,z*edge_length);
+					rect[3] = Vec3f((x+1)*edge_length,0,z*edge_length);
+					Paintrect(rect,m);
+					break;
+					case RIGHT:
+					glNormal3f(0,1,0);
+					rect[0]=Vec3f(x*edge_length,3*edge_length,(z+1)*edge_length);
+					rect[1]=Vec3f((x+1)*edge_length,3*edge_length,(z+1)*edge_length);
+					rect[2]=Vec3f((x+1)*edge_length,3*edge_length,z*edge_length);
+					rect[3]=Vec3f(x*edge_length,3*edge_length,z*edge_length);
+					Paintrect(rect,m);
+					break;
+					case FRONT:
+					glNormal3f(1,0,0);
+					rect[0] = Vec3f(3*edge_length,(y+1)*edge_length,(z+1)*edge_length);
+					rect[1] = Vec3f(3*edge_length,y*edge_length,(z+1)*edge_length);
+					rect[2] = Vec3f(3*edge_length,y*edge_length,z*edge_length);
+					rect[3] = Vec3f(3*edge_length,(y+1)*edge_length,z*edge_length);
+					Paintrect(rect,m);
+					break;
+					case BACK:
+					glNormal3f(-1,0,0);
+					rect[0] = Vec3f(0,y*edge_length,(z+1)*edge_length);
+					rect[1] = Vec3f(0,(y+1)*edge_length,(z+1)*edge_length);
+					rect[2] = Vec3f(0,(y+1)*edge_length,z*edge_length);
+					rect[3] = Vec3f(0,y*edge_length,z*edge_length);
+					Paintrect(rect,m);
+					break;
+					default:
+					break;
 			}
 
 		}
@@ -248,7 +252,7 @@ void Rubik::Render(){
 	// print();
 	// std::cout << "Press any key to continue" << std::endl;
 	// std::cin.get();
-	
+
 	glEnd();
 	glPopMatrix();
 }
@@ -344,7 +348,7 @@ void Rubik::rotate(Vec3i c, Side s, Direction dir){
 
 		default:
 		break;
-			
+
 	}
 }
 
@@ -482,7 +486,7 @@ void Rubik::printall(){
 			cube c = blocks[i];
 			switch(s.now){
 				case UP:
-				up[c.pos[0]][c.pos[1]] = s.idt; break; 
+				up[c.pos[0]][c.pos[1]] = s.idt; break;
 				case DOWN:
 				down[c.pos[0]][c.pos[1]] = s.idt; break;
 
