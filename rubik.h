@@ -41,12 +41,12 @@ public:
 	float curquat[4];
 	Vec3f p[4];
 	void play_rotate(Vec3f play_origin_point, Vec3f play_dest_point){
-	 play_origin_point = play_origin_point-prefix;
-	 play_origin_point = play_origin_point;
-	 play_dest_point = play_origin_point-prefix;
-	 play_dest_point = play_dest_point;
-	 std::cerr<<"doing rotation !!!"<<play_origin_point<<play_dest_point<<std::endl;
-
+	 std::cerr<<"doing rotation !!!"<<"origin"<<play_origin_point<<"dest"<<play_dest_point<<std::endl;
+	 //Vec3f normal_coordinate_origin = (play_origin_point-prefix)/edge_length;
+	 //normal_coordinate_origin[0] = floor(normal_coordinate_origin[0]);
+	 //[1] = floor(normal_coordinate_origin[1]);
+	 //normal_coordinate_origin[2] = floor(normal_coordinate_origin[2]);
+	 //std::cerr<<"doing rotation !!!"<<"origin"<<normal_coordinate_origin<<std::endl;
 	}
 private:
 	int size;

@@ -10,19 +10,7 @@
 					}
 void trackball(int x, int y, Vec3f& v);
 
-Rubik::Rubik(Level lv,int sz){
-	//Vec3f[4] Up,Down,Left,Right,Front,Back;
-	/*
-	vec4 v[8];
-	v[0] = vec4(1.0f*3*edge_length, 0.0f*3*edge_length,1.0f*3*edge_length,1.0f);
-	v[1] = vec4(1.0f*3*edge_length, 1.0f*3*edge_length, 1.0f*3*edge_length,0.0f);
-	v[2] = vec4(0.0f*3*edge_length,1.0f*3*edge_length,1.0f*3*edge_length,0.0f);
-	v[3] = vec4(1.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
-	v[4] = vec4(1.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
-	v[5] = vec4(1.0f*3*edge_length,1.0f*3*edge_length,0.0f*3*edge_length,0.0f);
-	v[6] = vec4(0.0f*3*edge_length,1.0f*3*edge_length,0.0f*3*edge_length,0.0f);
-	v[7] = vec4(0.0f*3*edge_length,0.0f*3*edge_length,0.0f*3*edge_length,0.0f);
-
+Rubik::Rubik(Level lv,int sz){/*
 	Up[0] = v[0];
 	Up[1] = v[1];
 	Up[2] = v[2];
@@ -169,7 +157,7 @@ void Rubik::Render(){
 	for(int i=0;i<4;i++)
 		for(int j=0;j<4;j++)
 			std::cout<<m[i][j]<<" ";*/
-	Vec3f prefix = Vec3f(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
+	
 	//glMultMatrixf(&m[0][0]);//important for rotation for tang
 	//glTranslatef(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
     glBegin(GL_QUADS);
@@ -178,7 +166,7 @@ void Rubik::Render(){
 		for(int yy=0; yy<3;yy++)
 			for(int xx=0; xx<3; xx++){
 				cube c = blocks[xx+yy*3+zz*3*3];
-		for(int j=0; j<c.sf.size(); j++){
+				for(int j=0; j<c.sf.size(); j++){
 				Surface s = c.sf[j];
 
 				float r,g,b;
@@ -196,12 +184,6 @@ void Rubik::Render(){
 					rect[2] = Vec3f(x*edge_length,(y+1)*edge_length,3*edge_length);
 					rect[3] = Vec3f(x*edge_length,y*edge_length,3*edge_length);
 					Paintrect(rect,m);
-					/*
-				glNormal3f(0,0,1);
-				glVertex3f((x+1)*edge_length,y*edge_length,3*edge_length);
-				glVertex3f((x+1)*edge_length,(y+1)*edge_length,3*edge_length);
-				glVertex3f(x*edge_length,(y+1)*edge_length,3*edge_length);
-				glVertex3f(x*edge_length,y*edge_length,3*edge_length);*/
 					break;
 					case DOWN:
 					glNormal3f(0,0,-1);
@@ -249,9 +231,6 @@ void Rubik::Render(){
 
 		}
 	}
-	// print();
-	// std::cout << "Press any key to continue" << std::endl;
-	// std::cin.get();
 
 	glEnd();
 	glPopMatrix();
@@ -275,7 +254,7 @@ void Rubik::colorMap(Side s, float& r,float& g, float&b){
 		b=0;
 		break;
 		case RIGHT:
-		r=0;
+		r=1;
 		g=1;
 		b=1;
 		case FRONT:

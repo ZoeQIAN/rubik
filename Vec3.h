@@ -247,7 +247,7 @@ public:
     c[2] = 0;
     for (int i=0;i<3;i++){
         for (int j=0;j<3;j++){
-            c[i]+=( m[i][j]*p[j]);
+            c[i]+=( m[j][i]*p[j]);
         }
     }
     p[0] = c[0];

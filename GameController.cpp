@@ -21,7 +21,7 @@ void GameController::Render(){
 		rubik->Render();
 }
 
-Vec3f FindOriginalIntersect(Ray r,GLfloat m[4][4],Vec3f p[8],int a,int b,int c,int d)
+Vec3f FindOriginalIntersect(Ray& r,GLfloat m[4][4],Vec3f p[8],int a,int b,int c,int d)
 {
 		Vec3f vp[4];
 		Vec3f vp_ori[4];
@@ -39,8 +39,9 @@ Vec3f FindOriginalIntersect(Ray r,GLfloat m[4][4],Vec3f p[8],int a,int b,int c,i
 		if(r.rect_is_intersect_with(vp))
 		{
 			float b0,b1,b2,b3;
-			b0=b1=b2=b3=0;
+			b0=0;b1=0;b2=0;b3=0;
 			r.rect_intersect_at(vp,b0,b1,b2,b3);
+			std::cerr << "coordinates are: "<<b0<<" "<<b1<<" "<<b2<<" "<<b3<<" "<<std::endl;
 			std::cerr << "original point is : "<<b0*vp_ori[0]+b1*vp_ori[1]+b2*vp_ori[2]+b3*vp_ori[3]<<std::endl;
 			return b0*vp_ori[0]+b1*vp_ori[1]+b2*vp_ori[2]+b3*vp_ori[3];
 
