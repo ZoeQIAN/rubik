@@ -51,7 +51,7 @@ public:
   return true;
 
   }
-  Vec3f intersect_at(Vec3f p0, Vec3f p1, Vec3f p2, float & b0, float& b1, float& b2)
+  Vec3f intersect_at(Vec3f p0, Vec3f p1, Vec3f p2, float & k_b0, float& k_b1, float& k_b2)
   {
     Vec3f e0(p1-p0);
     Vec3f e1(p2-p0);
@@ -62,15 +62,32 @@ public:
       assert(-1);
     Vec3f s((origin-p0)/a);
     Vec3f r(cross(s,e0));
-    b0 = (dot(s,q));
-    b1 = (dot(r,direction));
-    b2 = (1-b0-b1);
+    float b0(dot(s,q));
+    float b1(dot(r,direction));
+    float b2(1-b0-b1);
     if(b0 < 0 || b1 < 0 || b2 < 0)
       assert(-1);
-    double t(dot(e1,r));
-    if(t<0)
-      assert(-1);
-    return Vec3f(b0*p0+b1*p1+b2*p2);
+    float t(dot(e1,r));
+    Vec3f X =  Vec3f(origin + t*direction);
+    Vec3f ex =normalize( X - p0);
+    e0.normalize();
+    e1.normalize();
+    float k1,k2;
+    float sinphi,cosphi,sintheta,costheta;
+    sinphi = cross(ex,e1).length();
+    cosphi = dot(ex,e1);
+    sintheta = cross(e0,e1).length();
+    costheta = dot(e0,e1);
+    k1 = (X-p0).length() * sinphi/sintheta;
+    k2 = (X-p0).length() *  (sintheta*cosphi-sinphi*costheta)/sintheta;
+    float alpha1,alpha2;
+    alpha1 = k1/(p1-p0).length();
+    alpha2 = k2/(p2-p0).length();
+    k_b0 = (1-alpha1-alpha2);
+    k_b1 = alpha1;
+    k_b2 = alpha2;
+    return( (1-alpha1-alpha2)*p0 + alpha1*p1 +alpha2*p2);
+
   }
 };
 #endif
