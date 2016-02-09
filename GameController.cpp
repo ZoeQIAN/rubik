@@ -41,8 +41,8 @@ Vec3f FindOriginalIntersect(Ray& r,GLfloat m[4][4],Vec3f p[8],int a,int b,int c,
 			float b0,b1,b2,b3;
 			b0=0;b1=0;b2=0;b3=0;
 			r.rect_intersect_at(vp,b0,b1,b2,b3);
-			std::cerr << "coordinates are: "<<b0<<" "<<b1<<" "<<b2<<" "<<b3<<" "<<std::endl;
-			std::cerr << "original point is : "<<b0*vp_ori[0]+b1*vp_ori[1]+b2*vp_ori[2]+b3*vp_ori[3]<<std::endl;
+			//std::cerr << "coordinates are: "<<b0<<" "<<b1<<" "<<b2<<" "<<b3<<" "<<std::endl;
+			//std::cerr << "original point is : "<<b0*vp_ori[0]+b1*vp_ori[1]+b2*vp_ori[2]+b3*vp_ori[3]<<std::endl;
 			return b0*vp_ori[0]+b1*vp_ori[1]+b2*vp_ori[2]+b3*vp_ori[3];
 
 		}
@@ -189,7 +189,7 @@ void GameController::mouseRelease(Pos pos, bool leftb){
 			Vec3f point= FindOriginalIntersect(r,m,p,Verteces[i][0],Verteces[i][1],Verteces[i][2],Verteces[i][3]);
 			if(point!= Vec3f(0.0f, 0.0f, 0.0f)){
 			 intersect_point = point;
-			 std::cerr<<intersect_point<<std::endl;
+			 //std::cerr<<intersect_point<<std::endl;
 			 play_dest_point = intersect_point;
 			 break;
 			}

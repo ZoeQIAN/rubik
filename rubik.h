@@ -75,14 +75,10 @@ public:
 	 	std::cerr<<"UP SIDE"<<std::endl;
 	 	cur_cube[2] = 2;
 	 	switch(max_site){
-			case 1:	 	dir = U; std::cerr<<"U"<<std::endl;
-			break;
-			case -1:	dir = D; std::cerr<<"D"<<std::endl;
-			break;
-			case 2:		dir = L; std::cerr<<"L"<<std::endl;
-			break;
-			case -2: 	dir = R; std::cerr<<"R"<<std::endl;
-			break;
+			case -1:	 	dir = U; std::cerr<<"U"<<std::endl;			break;
+			case 1:	dir = D; std::cerr<<"D"<<std::endl;			break;
+			case -2:		dir = L; std::cerr<<"L"<<std::endl;			break;
+			case 2: 	dir = R; std::cerr<<"R"<<std::endl;			break;
 			default: 	assert(-1);
 		}
 		
@@ -93,8 +89,8 @@ public:
 	 	cur_side = DOWN;
 	 	cur_cube[2] = 0;
 	 	switch(max_site){
-			case -1:	dir = U; std::cerr<<"U"<<std::endl;break;
-			case 1:	 	dir = D; std::cerr<<"D"<<std::endl;break;
+			case 1:	dir = U; std::cerr<<"U"<<std::endl;break;
+			case -1:	 	dir = D; std::cerr<<"D"<<std::endl;break;
 			case 2:		dir = L; std::cerr<<"L"<<std::endl;break;
 			case -2: 	dir = R; std::cerr<<"R"<<std::endl;break;
 			default: 	assert(-1);
@@ -121,8 +117,8 @@ public:
 	 	switch(max_site){
 			case 3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
 			case -3:	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 2:		dir = R; std::cerr<<"R"<<std::endl;break;
-			case -2: 	dir = L; std::cerr<<"L"<<std::endl;break;
+			case 1:		dir = R; std::cerr<<"R"<<std::endl;break;
+			case -1: 	dir = L; std::cerr<<"L"<<std::endl;break;
 			default: 	assert(-1);
 		}
 	 }
@@ -145,10 +141,10 @@ public:
 	 	cur_side = BACK;
 	 	cur_cube[0] = 0;
 	 	switch(max_site){
-			case 3:	 	dir = U; break;std::cerr<<"U"<<std::endl;
-			case -3:	dir = D; break;std::cerr<<"D"<<std::endl;
-			case 2:		dir = R; break;std::cerr<<"R"<<std::endl;
-			case -2: 	dir = L; break;std::cerr<<"L"<<std::endl;
+			case -3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
+			case 3:	dir = D; std::cerr<<"D"<<std::endl;break;
+			case 2:		dir = R; std::cerr<<"R"<<std::endl;break;
+			case -2: 	dir = L; std::cerr<<"L"<<std::endl;break;
 			default: 	assert(-1);
 		}
 	 }
