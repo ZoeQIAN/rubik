@@ -51,11 +51,11 @@ public:
 	 cur_cube[0] = floor(point_resto[0]);
 	 cur_cube[1] = floor(point_resto[1]);
 	 cur_cube[2] = floor(point_resto[2]);
-	 std::cerr<<"doing rotation !!!"<<"origin"<<cur_cube<<std::endl;
+	 //std::cerr<<"doing rotation !!!"<<"origin"<<cur_cube<<std::endl;
 
 
 	 Vec3f Direction_to_go(play_dest_point - play_origin_point);
-	 std::cerr<<"Direction is"<<Direction_to_go<<std::endl;
+	 //std::cerr<<"Direction is"<<Direction_to_go<<std::endl;
 	 int max_site;
 	 float max_product = 0;
 	 for(int i=0;i<3;i++)
@@ -66,85 +66,135 @@ public:
 	 	}
 	 if(Direction_to_go[max_site-1]<0) max_site *=-1;
 
-	 std::cerr<<"Direction is"<<max_site<<std::endl;
+	 //std::cerr<<"Direction is"<<max_site<<std::endl;
 
 
 	 Side cur_side;
 	 if(point_resto[2] == 3)//up
-	 { 	cur_side = UP;
-	 	std::cerr<<"UP SIDE"<<std::endl;
+	 { 	
+	 	//std::cerr<<"UP SIDE"<<std::endl;
+	 	cur_side = UP;
 	 	cur_cube[2] = 2;
 	 	switch(max_site){
-			case -1:	 	dir = U; std::cerr<<"U"<<std::endl;			break;
-			case 1:	dir = D; std::cerr<<"D"<<std::endl;			break;
-			case -2:		dir = L; std::cerr<<"L"<<std::endl;			break;
-			case 2: 	dir = R; std::cerr<<"R"<<std::endl;			break;
+			case -1:	 	dir = U; 
+			//std::cerr<<"U"<<std::endl;	
+					break;
+			case 1:	dir = D;
+			// std::cerr<<"D"<<std::endl;	
+			 		break;
+			case -2:		dir = L; 
+			//std::cerr<<"L"<<std::endl;	
+
+					break;
+			case 2: 	dir = R; 
+			//std::cerr<<"R"<<std::endl;	
+					break;
 			default: 	assert(-1);
 		}
 		
 	 }
 	 else if(point_resto[2] == 0)//down
 	 {
-	 	std::cerr<<"DOWN SIDE"<<std::endl;
+	 	//std::cerr<<"DOWN SIDE"<<std::endl;
 	 	cur_side = DOWN;
 	 	cur_cube[2] = 0;
 	 	switch(max_site){
-			case 1:	dir = U; std::cerr<<"U"<<std::endl;break;
-			case -1:	 	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 2:		dir = L; std::cerr<<"L"<<std::endl;break;
-			case -2: 	dir = R; std::cerr<<"R"<<std::endl;break;
+			case 1:	dir = U; 
+			//std::cerr<<"U"<<std::endl;
+			break;
+			case -1:	 	dir = D;
+			 //std::cerr<<"D"<<std::endl;
+			 break;
+			case 2:		dir = L; 
+			//std::cerr<<"L"<<std::endl;
+			break;
+			case -2: 	dir = R; 
+			//std::cerr<<"R"<<std::endl;
+			break;
 			default: 	assert(-1);
 		}
 	 }
 	 else if(point_resto[1] == 3)//right
 	 {
-	 	std::cerr<<"RIGHT SIDE"<<std::endl;
+	 	//std::cerr<<"RIGHT SIDE"<<std::endl;
 	 	cur_side = RIGHT;
 	 	cur_cube[1] = 2;
 	 	switch(max_site){
-			case 3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
-			case -3:	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 1:		dir = L; std::cerr<<"L"<<std::endl;break;
-			case -1: 	dir = R; std::cerr<<"R"<<std::endl;break;
+			case 3:	 	dir = U; 
+			//std::cerr<<"U"<<std::endl;
+			break;
+			case -3:	dir = D;
+			// std::cerr<<"D"<<std::endl;
+			 break;
+			case 1:		dir = L;
+			 //std::cerr<<"L"<<std::endl;
+			 break;
+			case -1: 	dir = R;
+			 //std::cerr<<"R"<<std::endl;
+			 break;
 			default: 	assert(-1);
 		}
 	 }
 	 else if(point_resto[1] == 0)//left
 	 {
-	 	std::cerr<<"LEFT SIDE"<<std::endl;
+	 	//std::cerr<<"LEFT SIDE"<<std::endl;
 	 	cur_side = LEFT;
 	 	cur_cube[1] = 0;
 	 	switch(max_site){
-			case 3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
-			case -3:	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 1:		dir = R; std::cerr<<"R"<<std::endl;break;
-			case -1: 	dir = L; std::cerr<<"L"<<std::endl;break;
+			case 3:	 	dir = U; 
+			//std::cerr<<"U"<<std::endl;
+			break;
+			case -3:	dir = D; 
+			//std::cerr<<"D"<<std::endl;
+			break;
+			case 1:		dir = R; 
+			//std::cerr<<"R"<<std::endl;
+			break;
+			case -1: 	dir = L; 
+			//std::cerr<<"L"<<std::endl;
+			break;
 			default: 	assert(-1);
 		}
 	 }
 	 else if(point_resto[0] == 3)//front
 	 {
-	 	std::cerr<<"FRONT SIDE"<<std::endl;
+	 	//std::cerr<<"FRONT SIDE"<<std::endl;
 	 	cur_side = FRONT;
 	 	cur_cube[0] = 2;
 	 	switch(max_site){
-			case 3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
-			case -3:	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 2:		dir = L; std::cerr<<"L"<<std::endl;break;
-			case -2: 	dir = R; std::cerr<<"R"<<std::endl;break;
+			case 3:	 	dir = U; 
+			//std::cerr<<"U"<<std::endl;
+			break;
+			case -3:	dir = D; 
+			//std::cerr<<"D"<<std::endl;
+			break;
+			case 2:		dir = L; 
+			//std::cerr<<"L"<<std::endl;
+			break;
+			case -2: 	dir = R; 
+			//std::cerr<<"R"<<std::endl;
+			break;
 			default: 	assert(-1);
 		}
 	 }
 	 else if(point_resto[0] == 0)//back
 	 {
-	 	std::cerr<<"BACK SIDE"<<std::endl;
+	 	//std::cerr<<"BACK SIDE"<<std::endl;
 	 	cur_side = BACK;
 	 	cur_cube[0] = 0;
 	 	switch(max_site){
-			case -3:	 	dir = U; std::cerr<<"U"<<std::endl;break;
-			case 3:	dir = D; std::cerr<<"D"<<std::endl;break;
-			case 2:		dir = R; std::cerr<<"R"<<std::endl;break;
-			case -2: 	dir = L; std::cerr<<"L"<<std::endl;break;
+			case -3:	 	dir = U; 
+			//std::cerr<<"U"<<std::endl;
+			break;
+			case 3:	dir = D;
+			//std::cerr<<"D"<<std::endl;
+			break;
+			case 2:		dir = R; 
+			//std::cerr<<"R"<<std::endl;
+			break;
+			case -2: 	dir = L; 
+			//std::cerr<<"L"<<std::endl;
+			break;
 			default: 	assert(-1);
 		}
 	 }

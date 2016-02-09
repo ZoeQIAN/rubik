@@ -1,5 +1,5 @@
 CIBLE = main
-SRCS =  main.cpp GameController.cpp rubik.cpp Camera.cpp basicfunction.cpp maths_funcs.cpp
+SRCS =  main.cpp GameController.cpp rubik.cpp Camera.cpp basicfunction.cpp maths_funcs.cpp Button.cpp Texture.cpp
 
 
 LIBS =  -lglut -lGLU -lGL -lm
@@ -20,8 +20,10 @@ $(CIBLE): $(OBJS)
 clean:
 	rm -f  *~  $(CIBLE) $(OBJS)
 
+Texture.o: Texture.h
 basicfunction.o: basicfunction.h
 Camera.o: Camera.cpp Camera.h basicfunction.h
+Button.o: Button.cpp Button.h
 rubik.o: rubik.cpp rubik.h basicfunction.h maths_funcs.h
-GameController.o: GameController.cpp GameController.h
+GameController.o: GameController.cpp GameController.h Button.h
 main.o: main.cpp GameController.h Camera.h

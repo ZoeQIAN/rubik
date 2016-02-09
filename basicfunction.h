@@ -1,8 +1,8 @@
 void build_rotmatrix(float m[4][4], float q[4]);
-static void normalize_quat(float q[4]);
+//static void normalize_quat(float q[4]);
 void add_quats(float q1[4], float q2[4], float dest[4]);
 void negate_quat(float q[4], float nq[4]);
-static float tb_project_to_sphere(float r, float x, float y);
+//static float tb_project_to_sphere(float r, float x, float y);
 void trackball(float q[4], float p1x, float p1y, float p2x, float p2y);
 void axis_to_quat(float a[3], float phi, float q[4]);
 void vzero(float *v);

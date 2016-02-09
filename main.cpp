@@ -18,6 +18,7 @@
 #include "Vec3.h"
 #include "Camera.h"
 #include "GameController.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -30,6 +31,16 @@ static Camera camera;
 static Rubik rubik(SIMPLE,3);
 static GameController game(DEFAULT_SCREENWIDTH,DEFAULT_SCREENHEIGHT);
 // static Mesh mesh;
+
+GLint texture;
+Texture *t1;
+
+GLfloat LightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f }; //环境光参数，半亮白色
+GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f }; //漫射光参数，
+GLfloat LightSpecular[] = { 0.5f, 0.5f, 0.5f, 1.0f }; //漫射光参数，
+GLfloat LightPosition1[] = { 0.0f, 0.0f, 100.0f, -1.0f }; //光源位置
+GLfloat LightPosition2[] = { 10.0f, 10.0f, 590.0f, -1.0f }; //光源位置
+GLfloat LightPosition3[] = { 5423.0f, -5340.0f, 1200.0f, -1.0f }; //光源位置
 
 void printUsage () {
     // std::cerr << std::endl
@@ -45,6 +56,7 @@ void printUsage () {
  //         << " <drag>+<middle button>: zoom" << std::endl
  //         << " q, <esc>: Quit" << std::endl << std::endl;
 }
+/*
 void initLighting () {
     GLfloat light_position1[4] = {52, 16, 50, 0};
     GLfloat light_position2[4] = {26, 48, 50, 0};
@@ -84,7 +96,7 @@ void initMaterial () {
     glMaterialfv (GL_FRONT_AND_BACK, GL_AMBIENT, material_ambient);
     glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
 }
-
+*/
 void init () {
     glCullFace (GL_BACK);     // Specifies the faces to cull (here the ones pointing away from the camera)
     glEnable (GL_CULL_FACE); // Enables face culling (based on the orientation defined by the CW/CCW enumeration).
@@ -94,28 +106,97 @@ void init () {
     glClearColor (0.0f, 0.0f, 0.0f, 1.0f); // Background color
     // glClearColor (1.0f, 1.0f, 1.0f, 1.0f);
 
-    //initLighting ();
-    //initMaterial ();
-    //glDisable (GL_COLOR_MATERIAL);
-    glShadeModel (GL_SMOOTH);  
+    glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient); //设置环境光
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse); //设置漫射光
+    glLightfv(GL_LIGHT1, GL_POSITION, LightPosition1); //设置光源位置
+    glLightfv(GL_LIGHT1, GL_SPECULAR, LightSpecular);
+    
+    glLightfv(GL_LIGHT2, GL_AMBIENT, LightAmbient); //设置环境光
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, LightDiffuse); //设置漫射光
+    glLightfv(GL_LIGHT2, GL_POSITION, LightPosition2); //设置光源位置
+    glLightfv(GL_LIGHT2, GL_SPECULAR, LightSpecular);
+    
+    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT2);
+    glEnable(GL_LIGHTING);
+
+    GLfloat a[] = { 0.1, 0.1, 0.1, 1.0 };
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+   
+    glEnable(GL_TEXTURE_2D); // Activation de la texturation 2D
+    
+    GLfloat white[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 80.0f);
+    
+    glColorMaterial(GL_FRONT, GL_AMBIENT);
+    glEnable(GL_COLOR_MATERIAL);
+    
+    glShadeModel (GL_SMOOTH);
+    // mesh.loadOFF (modelFilename);
+
+    t1=new Texture();
+    t1->readImage("wood1.ppm");
+    t1->createTexture(1);  
 
     camera.resize (DEFAULT_SCREENWIDTH, DEFAULT_SCREENHEIGHT);
     // mesh.loadOFF (modelFilename);
 }
 
 void drawScene () {
-    game.Render(); 
-    /*glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
- 
-      // Front face  (z = 1.0f)
-      glColor3f(1.0f, 0.0f, 0.0f);     // Red
-      glVertex3f( 1.0f,  1.0f, 1.0f);
-      glVertex3f(-1.0f,  1.0f, 1.0f);
-      glVertex3f(-1.0f, -1.0f, 1.0f);
-      glVertex3f( 1.0f, -1.0f, 1.0f);
+    if(game.isGameMode())
+    {
+        /*
+        glMatrixMode(GL_PROJECTION);  
+        glLoadIdentity();  
+        glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);  
+        glMatrixMode(GL_MODELVIEW);  
+        glLoadIdentity();  
 
-    glEnd();  // End of drawing color-cube
-    */
+        glPushMatrix();  
+        glBindTexture(GL_TEXTURE_2D, 1);
+        glBegin(GL_QUADS);
+        glColor3f(155,55,85);
+        glNormal3f(0,0,1);
+        glTexCoord2f(1.0f,1.0f);
+        glVertex3f(150,150,-100);
+        glTexCoord2f(0.0f,1.0f);
+        glVertex3f(-150,150,-100);
+        glTexCoord2f(0.0f,0.0f);
+        glVertex3f(-150,-150,-100);
+        glTexCoord2f(1.0f,0.0f);
+        glVertex3f(150,-150,-100);
+        glEnd();
+
+        glPopMatrix();
+        */
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, 1);
+        glBegin(GL_QUADS);
+        glColor3f(155,55,85);
+        glNormal3f(0,0,1);
+        float k = 0.1;
+        glTexCoord2f(1.0f,1.0f);
+        glVertex3f(25*k,5*k,-2);
+        glTexCoord2f(0.0f,1.0f);
+        glVertex3f(-5*k,5*k,-2);
+        glTexCoord2f(0.0f,0.0f);
+        glVertex3f(-15*k,-10*k,0.1);
+        glTexCoord2f(1.0f,0.0f);
+        glVertex3f(10*k,-10*k,0.1);
+        glEnd();
+        glPopMatrix();
+
+
+        camera.resize (DEFAULT_SCREENWIDTH, DEFAULT_SCREENHEIGHT);
+    }
+
+    game.Render(); 
 }
 
 void reshape(int w, int h) {
@@ -159,7 +240,7 @@ void key (unsigned char keyPressed, int x, int y) {
 
 void mouse (int button, int state, int x, int y) {
     // camera.handleMouseClickEvent (button, state, x, y);
-    Pos pos={x,y}; 
+    Pos pos={float(x),float(y)}; 
     if(button==GLUT_LEFT_BUTTON)  
     {
     switch(state)  

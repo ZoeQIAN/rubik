@@ -2,13 +2,40 @@
 #include "basicfunction.h"
 #include <cstdio>
 #include <cstdlib>
-
-#define Paintrect(rect,m) for(int i=0; i<4; i++){\
-						rect[i] +=prefix;\
-						rect[i].rotate_by_matrix(m);\
-						glVertex3f(rect[i].p[0],rect[i].p[1],rect[i].p[2]);\
-					}
+//#define gen_cur_rect(cur_rect,i,j,rect) cur_rect = float(1 - i*1.0/sum - j*1.0/sum)*rect[1] + float(i*1.0/sum)* rect[0] + float(j*1.0/sum)*rect[2]
 void trackball(int x, int y, Vec3f& v);
+
+void Paintrect(Vec3f* rect, GLfloat m[4][4], Vec3f prefix,float r,float g,float b, Vec3f normal){
+
+	normal.rotate_by_matrix(m);
+    glNormal3f(normal.p[0],normal.p[1],normal.p[2]);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	float line_width = 0.05;
+	glBegin(GL_QUADS);
+	glColor3f(r,g,b);
+	for(int i=0; i<4; i++)
+	{
+		rect[i] +=prefix;
+		rect[i].rotate_by_matrix(m);
+		glVertex3f(rect[i].p[0],rect[i].p[1],rect[i].p[2]);
+	}
+
+
+	glEnd();
+
+
+    glLineWidth(3);
+
+    glColor3f(0.3f,0.3f,0.3f);
+    glBegin(GL_LINE_STRIP);
+    glVertex3f(rect[0].p[0],rect[0].p[1],rect[0].p[2]);
+    glVertex3f(rect[1].p[0],rect[1].p[1],rect[1].p[2]);
+    glVertex3f(rect[2].p[0],rect[2].p[1],rect[2].p[2]);
+    glVertex3f(rect[3].p[0],rect[3].p[1],rect[3].p[2]);
+    glVertex3f(rect[0].p[0],rect[0].p[1],rect[0].p[2]);
+    glEnd();
+}
 
 Rubik::Rubik(Level lv,int sz){/*
 	Up[0] = v[0];
@@ -41,6 +68,7 @@ Rubik::Rubik(Level lv,int sz){/*
 	Right[2] = v[5];
 	Right[3] = v[6];
 */
+
 	p[0] = Vec3f(1.5*edge_length, -1.5*edge_length, 1.5*edge_length);
 	p[1] = Vec3f(1.5*edge_length, 1.5*edge_length, 1.5*edge_length);
 	p[2] = Vec3f(-1.5*edge_length, 1.5*edge_length, 1.5*edge_length);
@@ -76,15 +104,15 @@ Rubik::Rubik(Level lv,int sz){/*
 					break;
 				}
 			}
-	// shuffle(lv);
-
+	shuffle(lv);
+	std::cout << "Selected level is: " << lv << std::endl;
 	angle=0;
 	trackball(0,0,curPos);
 	trackball(0,0,lastPos);
-	std::cout << curPos << std::endl;
-	std::cout << lastPos << std::endl;
+	//std::cout << curPos << std::endl;
+	//std::cout << lastPos << std::endl;
 	calRotation();
-	std::cout << axis[0] << "," << axis[1] << ","<< axis[2] << "," << angle<< std::endl;
+	//std::cout << axis[0] << "," << axis[1] << ","<< axis[2] << "," << angle<< std::endl;
 	axis_to_quat(axis,angle,curquat);
 	std::printf("curquat = %f %f %f %f\n", curquat[0], curquat[1], curquat[2], curquat[3]);
 }
@@ -107,7 +135,7 @@ void trackball(int x, int y, Vec3f& v) {
 void Rubik::startRotation(float x, float y){
 	rotating=true;
 	trackball(x,y,lastPos);
-	std::cout << "Start:" << lastPos << std::endl;
+	//std::cout << "Start:" << lastPos << std::endl;
 }
 void Rubik::stopRotation(){
 	rotating=false;
@@ -142,88 +170,78 @@ void Rubik::calRotation(){
 }
 
 void Rubik::Render(){
-	//std::printf("curquat = %f %f %f %f\n", curquat[0], curquat[1], curquat[2], curquat[3]);
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    //glOrtho(0, DEFAULT_SCREENWIDTH, 0, DEFAULT_SCREENHEIGHT, 0, DEFAULT_SCREENDEPTH);
+	
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
     glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
     glPushMatrix();
-
-    //glTranslatef(0.5 * DEFAULT_SCREENWIDTH,0.5 *DEFAULT_SCREENHEIGHT,-230);
     GLfloat m[4][4];
   	build_rotmatrix(m, curquat);
-	/*std::cout<<"rotation matrix: ";
-	for(int i=0;i<4;i++)
-		for(int j=0;j<4;j++)
-			std::cout<<m[i][j]<<" ";*/
-	
-	//glMultMatrixf(&m[0][0]);//important for rotation for tang
-	//glTranslatef(-1.5 * edge_length,-1.5 * edge_length,-1.5 * edge_length);
-    glBegin(GL_QUADS);
+  	Vec3f normal;
+    //glBegin(GL_QUADS);
 		Vec3f rect[4];
 	for(int zz=0; zz<3;zz++)
 		for(int yy=0; yy<3;yy++)
 			for(int xx=0; xx<3; xx++){
 				cube c = blocks[xx+yy*3+zz*3*3];
-				for(int j=0; j<c.sf.size(); j++){
+				for(unsigned int j=0; j<c.sf.size(); j++){
 				Surface s = c.sf[j];
 
 				float r,g,b;
 				colorMap(s.init,r,g,b);
-				glColor3f(r,g,b);
+				//glColor3f(r,g,b);
 
 				int x=c.pos[0];
 				int y=c.pos[1];
 				int z=c.pos[2];
 				switch(s.now){
 					case UP:
-					glNormal3f(0,0,1);
+					normal = Vec3f(0,0,1);
 					rect[0] = Vec3f((x+1)*edge_length,y*edge_length,3*edge_length);
 					rect[1] = Vec3f((x+1)*edge_length,(y+1)*edge_length,3*edge_length);
 					rect[2] = Vec3f(x*edge_length,(y+1)*edge_length,3*edge_length);
 					rect[3] = Vec3f(x*edge_length,y*edge_length,3*edge_length);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					case DOWN:
-					glNormal3f(0,0,-1);
+					normal = Vec3f(0,0,-1);
 					rect[0] = Vec3f(x*edge_length,y*edge_length,0);
 					rect[1] = Vec3f(x*edge_length,(y+1)*edge_length,0);
 					rect[2] = Vec3f((x+1)*edge_length,(y+1)*edge_length,0);
 					rect[3] = Vec3f((x+1)*edge_length,(y)*edge_length,0);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					case LEFT:
-					glNormal3f(0,-1,0);
+					normal = Vec3f(0,-1,0);
 					rect[0] = Vec3f((x+1)*edge_length,0,(z+1)*edge_length);
 					rect[1] = Vec3f(x*edge_length,0,(z+1)*edge_length);
 					rect[2] = Vec3f(x*edge_length,0,z*edge_length);
 					rect[3] = Vec3f((x+1)*edge_length,0,z*edge_length);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					case RIGHT:
-					glNormal3f(0,1,0);
+					normal = Vec3f(0,1,0);
 					rect[0]=Vec3f(x*edge_length,3*edge_length,(z+1)*edge_length);
 					rect[1]=Vec3f((x+1)*edge_length,3*edge_length,(z+1)*edge_length);
 					rect[2]=Vec3f((x+1)*edge_length,3*edge_length,z*edge_length);
 					rect[3]=Vec3f(x*edge_length,3*edge_length,z*edge_length);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					case FRONT:
-					glNormal3f(1,0,0);
+					normal = Vec3f(1,0,0);
 					rect[0] = Vec3f(3*edge_length,(y+1)*edge_length,(z+1)*edge_length);
 					rect[1] = Vec3f(3*edge_length,y*edge_length,(z+1)*edge_length);
 					rect[2] = Vec3f(3*edge_length,y*edge_length,z*edge_length);
 					rect[3] = Vec3f(3*edge_length,(y+1)*edge_length,z*edge_length);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					case BACK:
-					glNormal3f(-1,0,0);
+					normal = Vec3f(-1,0,0);
 					rect[0] = Vec3f(0,y*edge_length,(z+1)*edge_length);
 					rect[1] = Vec3f(0,(y+1)*edge_length,(z+1)*edge_length);
 					rect[2] = Vec3f(0,(y+1)*edge_length,z*edge_length);
 					rect[3] = Vec3f(0,y*edge_length,z*edge_length);
-					Paintrect(rect,m);
+					Paintrect(rect,m,prefix,r,g,b,normal);
 					break;
 					default:
 					break;
@@ -232,20 +250,20 @@ void Rubik::Render(){
 		}
 	}
 
-	glEnd();
+	//glEnd();
 	glPopMatrix();
 }
 
 void Rubik::colorMap(Side s, float& r,float& g, float&b){
 	switch(s){
 		case UP:
-		r=1;
+		r=0;
 		g=0;
-		b=0;
+		b=1;
 		break;
 		case DOWN:
 		r=1;
-		g=1;
+		g=0;
 		b=0;
 		break;
 		case LEFT:
@@ -255,17 +273,18 @@ void Rubik::colorMap(Side s, float& r,float& g, float&b){
 		break;
 		case RIGHT:
 		r=1;
-		g=1;
-		b=1;
-		case FRONT:
-		r=0;
 		g=0;
 		b=1;
 		break;
+		case FRONT:
+		r=0.2;
+		g=0.5;
+		b=0.5;
+		break;
 		case BACK:
 		r=1;
-		g=0;
-		b=1;
+		g=1;
+		b=0;
 		break;
 		default:
 		break;
@@ -275,17 +294,9 @@ void Rubik::shuffle(Level lv){
 	 srand(time(NULL));
 	 for (int i = 0; i < lv; ++i)
 	 {
-	 	// int l,m,n;
-	 	// do{
-	 	// 	l=rand()%6;
-	 	// 	m=rand()%size;
-	 	// 	n=rand()%size;
-	 	// }while(l==1 && m==1 && n==1);
-	 	// rotate(Vec3i(l,m,n),rand()%4);
 	 	int l=rand()%3;
 	 	int m=rand()%3;
 	 	int n=rand()%2;
-	 	// std::cout << l << " " << m << " " << n << std::endl;
 	 	transform(l, m, n==1?true:false);
 	 }
 }
@@ -336,15 +347,13 @@ void Rubik::transform(int fix,int pf, bool dir){
 	int right = (dir?fix-1:fix+1)%3;
 	if(left==-1) left=2;
 	if(right==-1) right=2;
-	// std::cout << left << " " << right << std::endl;
-	// std::cout << std::endl;
 	for(int i=0; i<3*3*3; i++){
 		if(blocks[i].pos[fix] == pf){
 			int vl = blocks[i].pos[left];
 			int vr = blocks[i].pos[right];
 			blocks[i].pos[left] = vr;
 			blocks[i].pos[right] = -vl+2;
-			for(int j=0; j<blocks[i].sf.size(); j++){
+			for(unsigned int j=0; j<blocks[i].sf.size(); j++){
 				blocks[i].sf[j].now = surfaceRotate(blocks[i].sf[j].now,dir,fix);
 			}
 		}
@@ -416,12 +425,11 @@ Side Rubik::surfaceRotate(Side s, bool dir, int pixel){
 		break;
 
 	}
-	//return UP;
 }
 
 bool Rubik::judge(){
 	for(int i=0; i<3*3*3; i++){
-		for(int j=0; j<blocks[i].sf.size(); j++){
+		for(unsigned int j=0; j<blocks[i].sf.size(); j++){
 			if(blocks[i].sf[j].init != blocks[i].sf[j].now)
 				return false;
 		}
@@ -435,7 +443,7 @@ void Rubik::print2(){
 			for(int k=0; k<3; k++){
 				int p = k+j*3+i*3*3;
 				std::cout << blocks[p].pos << ":";
-				for(int m=0; m<blocks[p].sf.size(); m++){
+				for(unsigned int m=0; m<blocks[p].sf.size(); m++){
 					std::cout << blocks[p].sf[m].now << " ";
 				}
 				std::cout << std::endl;
@@ -453,14 +461,8 @@ void Rubik::printall(){
 	int front[3][3];
 	int back[3][3];
 
-	// vector<int> up;
-	// vector<int> down;
-	// vector<int> left;
-	// vector<int> right;
-	// vector<int> front;
-	// vector<int> back;
 	for(int i=0; i<3*3*3; i++){
-		for(int j=0; j<blocks[i].sf.size(); j++){
+		for(unsigned int j=0; j<blocks[i].sf.size(); j++){
 			Surface s = blocks[i].sf[j];
 			cube c = blocks[i];
 			switch(s.now){
