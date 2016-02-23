@@ -11,15 +11,11 @@ From the top to bottom:
 Simple
 Medium
 Hard
-On the right:
-Back
 Click either level, the rubik cube game starts
 
-####If you click on "Scores", it transits to the page for scores of history
-Not implemented yet
-
-####If you click on "Quit", the programme will exit
-
+#### Game Mode
+use left button to turn the rubik around
+use right button to rotate the cubes of the rubik
 
 
 ### Structures
